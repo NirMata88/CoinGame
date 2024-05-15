@@ -1,168 +1,171 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo da Moeda - Nirmata Co.</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f0f0f;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-        .container {
-            max-width: 400px;
-            padding: 20px;
-            background-color: #222;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 1;
-        }
-        h1 {
-            color: #fff;
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-        p {
-            color: #ccc;
-            text-align: justify;
-            line-height: 1.5;
-            font-size: 16px;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #fff;
-            font-size: 18px;
-        }
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            font-size: 16px;
-            background-color: #333;
-            color: #fff;
-        }
-        .button {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            cursor: pointer;
-            font-size: 16px;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .moedas {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .total-moedas {
-            font-size: 20px;
-            color: #fff;
-            margin-bottom: 10px;
-        }
-        .moeda-euro {
-            width: 100px;
-            height: 100px;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/1_euro_obverse.png/200px-1_euro_obverse.png');
-            background-size: cover;
-            animation: girarMoeda 2s infinite;
-            margin: 0 auto;
-        }
-        @keyframes girarMoeda {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
+    <title>Pedra, Papel e Tesoura - Melhor de 3</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Jogo da Moeda - Nirmata Co.</h1>
-        <p>O Jogo da Moeda é um jogo onde cada jogador leva até 3 moedas e tenta adivinhar o total de moedas em jogo. Na primeira jogada, cada jogador deve levar pelo menos uma moeda. Nas jogadas seguintes, podem levar o que quiserem, incluindo nenhuma. O jogador que adivinhar corretamente o total de moedas ganha o jogo.</p>
-        
-        <div class="input-group">
-            <label for="numeroJogadores">Quantos jogadores estão participando? (Entre 2 e 10)</label>
-            <input type="number" id="numeroJogadores" min="2" max="10">
+        <h1>Pedra, Papel e Tesoura</h1>
+        <div class="scoreboard">
+            <p>Jogador: <span id="player-score">0</span></p>
+            <p>Computador: <span id="computer-score">0</span></p>
         </div>
-
-        <button class="button" onclick="iniciarJogo()">Iniciar Jogo</button>
+        <div class="choices">
+            <button id="rock" class="choice">Pedra</button>
+            <button id="paper" class="choice">Papel</button>
+            <button id="scissors" class="choice">Tesoura</button>
+        </div>
+        <div class="result">
+            <h2>Resultado</h2>
+            <p id="game-result"></p>
+        </div>
+        <div class="display">
+            <p>Você escolheu: <span id="player-choice"></span></p>
+            <p>Computador escolheu: <span id="computer-choice"></span></p>
+        </div>
     </div>
-
-    <script>
-        function iniciarJogo() {
-            const numeroJogadores = parseInt(document.getElementById("numeroJogadores").value);
-
-            if (isNaN(numeroJogadores) || numeroJogadores < 2 || numeroJogadores > 10) {
-                alert("Por favor, insira um número válido de jogadores (entre 2 e 10).");
-                return;
-            }
-
-            let nomesJogadores = [];
-            let moedasPorJogador = [];
-
-            for (let i = 1; i <= numeroJogadores; i++) {
-                let nome = prompt("Nome do Jogador " + i + ":");
-                nomesJogadores.push(nome);
-
-                let moedas = parseInt(prompt("Jogador " + nome + ", quantas moedas você tem? (Máximo 3 moedas)"));
-                if (isNaN(moedas) || moedas < 1 || moedas > 3) {
-                    alert("Por favor, insira um número válido de moedas (entre 1 e 3) para o jogador " + nome + ".");
-                    return;
-                }
-                moedasPorJogador.push(moedas);
-            }
-
-            let totalMoedas = moedasPorJogador.reduce((acc, cur) => acc + cur, 0);
-            const palpiteTotal = parseInt(prompt("Quantas moedas você acha que estão em jogo?"));
-            if (isNaN(palpiteTotal)) {
-                alert("Por favor, insira um número válido para o total de moedas em jogo.");
-                return;
-            }
-
-            let vencedor = false;
-            for (let i = 0; i < nomesJogadores.length; i++) {
-                if (palpiteTotal === totalMoedas) {
-                    alert("Parabéns, " + nomesJogadores[i] + "! Você acertou o total de moedas em jogo e ganhou o jogo!");
-                    vencedor = true;
-                    break;
-                }
-            }
-
-            if (!vencedor) {
-                alert("Nenhum jogador acertou o total de moedas em jogo. O total de moedas era: " + totalMoedas);
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background-color: #f0f8ff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding: 20px;
+}
+
+h1 {
+    color: #ff4500;
+    font-size: 2.5em;
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+    font-size: 1.5em;
+}
+
+.choices {
+    margin: 20px;
+}
+
+.choice {
+    background-color: #ff6347;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    color: white;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+.choice:hover {
+    background-color: #ff4500;
+}
+
+.choice:active {
+    transform: scale(0.95);
+}
+
+.result, .display {
+    margin-top: 20px;
+}
+
+.result h2 {
+    font-size: 1.8em;
+    color: #2e8b57;
+}
+
+.result p, .display p {
+    font-size: 1.5em;
+}
+
+#game-result {
+    color: #2e8b57;
+    font-weight: bold;
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const choices = ['Pedra', 'Papel', 'Tesoura'];
+    const buttons = document.querySelectorAll('.choice');
+    const gameResult = document.getElementById('game-result');
+    const playerChoiceDisplay = document.getElementById('player-choice');
+    const computerChoiceDisplay = document.getElementById('computer-choice');
+    const playerScoreDisplay = document.getElementById('player-score');
+    const computerScoreDisplay = document.getElementById('computer-score');
+
+    let playerScore = 0;
+    let computerScore = 0;
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const playerChoice = button.id;
+            const computerChoice = getComputerChoice();
+            const result = getResult(playerChoice, computerChoice);
+
+            playerChoiceDisplay.textContent = playerChoice;
+            computerChoiceDisplay.textContent = computerChoice;
+            gameResult.textContent = result;
+
+            if (result === 'Você ganhou!') {
+                playerScore++;
+            } else if (result === 'Você perdeu!') {
+                computerScore++;
+            }
+
+            playerScoreDisplay.textContent = playerScore;
+            computerScoreDisplay.textContent = computerScore;
+
+            if (playerScore === 2  computerScore === 2) {
+                declareWinner();
+                resetGame();
+            }
+        });
+    });
+
+    function getComputerChoice() {
+        return choices[Math.floor(Math.random() * choices.length)];
+    }
+
+    function getResult(player, computer) {
+        if (player === computer) {
+            return 'Empate!';
+        } else if (
+            (player === 'rock' && computer === 'scissors') 
+            (player === 'paper' && computer === 'rock') ||
+            (player === 'scissors' && computer === 'paper')
+        ) {
+            return 'Você ganhou!';
+        } else {
+            return 'Você perdeu!';
+        }
+    }
+
+    function declareWinner() {
+        if (playerScore === 2) {
+            alert('Parabéns! Você ganhou ao melhor de 3!');
+        } else if (computerScore === 2) {
+            alert('Que pena! O computador ganhou ao melhor de 3.');
+        }
+    }
+
+    function resetGame() {
+        playerScore = 0;
+        computerScore = 0;
+        playerScoreDisplay.textContent = playerScore;
+        computerScoreDisplay.textContent = computerScore;
+        gameResult.textContent = '';
+        playerChoiceDisplay.textContent = '';
+        computerChoiceDisplay.textContent = '';
+    }
+});
